@@ -14,10 +14,11 @@ interface Props {
 export const CartButton: FC<Props> = ({ className }: Props) => {
 	const totalAmount = useCartStore((state) => state.totalAmount);
 	const items = useCartStore((state) => state.items);
+	const loading = useCartStore((state) => state.loading);
 
 	return (
 		<CartDrawer>
-			<Button className={cn('group relative', className)}>
+			<Button loading={loading} className={cn('group relative', { 'w-[105px]': loading }, className)}>
 				<b>{totalAmount} Р</b>
 				<span className="h-full w-[1px] bg-white/30 mx-3"></span>
 				<div className="flex items-center gap-1 transition duration-300 group-hover:opacity-0">

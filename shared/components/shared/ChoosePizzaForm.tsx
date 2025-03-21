@@ -15,7 +15,8 @@ interface Props {
 	name: string;
 	ingredients: Ingredient[];
 	items: ProductItem[];
-	onClickAddCart?: VoidFunction;
+	loading?: boolean;
+	onSubmitAction: (itemId: number, ingredients: number[]) => void;
 	className?: string;
 }
 
@@ -24,11 +25,20 @@ export const ChoosePizzaForm: FC<Props> = ({
 	items,
 	imageUrl,
 	ingredients,
-	onClickAddCart,
+	loading,
+	onSubmitAction,
 	className,
 }: Props) => {
-	const { size, type, selectedIngredients, availableSizes, setSize, setType, addIngredient } =
-		usePizzaOptions(items);
+	const {
+		size,
+		type,
+		selectedIngredients,
+		availableSizes,
+		currentItemId,
+		setSize,
+		setType,
+		addIngredient,
+	} = usePizzaOptions(items);
 
 	const { totalPrice, textDetails } = getPizzaDetails(
 		type,
@@ -39,7 +49,9 @@ export const ChoosePizzaForm: FC<Props> = ({
 	);
 
 	const handleClickAdd = () => {
-		onClickAddCart?.();
+		if (currentItemId) {
+			onSubmitAction(currentItemId, Array.from(selectedIngredients));
+		}
 	};
 
 	return (
@@ -83,6 +95,7 @@ export const ChoosePizzaForm: FC<Props> = ({
 				</div>
 
 				<Button
+					loading={loading}
 					onClick={handleClickAdd}
 					className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10"
 				>
